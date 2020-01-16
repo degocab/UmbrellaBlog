@@ -1,0 +1,130 @@
+﻿@model IEnumerable<Umbrella.Blog.Models.MenuItem>
+
+@{
+    ViewBag.Title = "Menu Items";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<meta http-equiv="no-cache">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<style>
+    .table{
+        background-color: white;
+    }
+
+    table, th, td {
+        border: 1px solid #808080;
+    }
+    #tableHeader {
+        border: 1px solid #808080 ;
+        background-color: #898787
+    }
+    #saveNewItem {
+        color: #ffffff;
+        background-color: #5cb85c;
+        border-color: #4cae4c;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        margin-top: 5px;
+        margin-right: 5px;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.428571429;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    #cancelBtn {
+        padding: 6px 12px;
+        margin-bottom: 0;
+        margin-top: 5px;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+</style>
+
+
+
+<div id="blogContent"> 
+    <div class="col-md-12">
+        <div class="col-md-6">
+            <h2>@ViewBag.Title</h2>
+            <hr />
+            </div>
+            
+       
+          
+        </div>
+    <hr id="blackHr"/>
+
+   
+        
+        <div>
+            <button style="margin-bottom:5px" type="button" id="newMenuItemBtn" onclick="newItem()" class="btn btn-success">Create New Menu Item</button>
+           
+
+        </div>
+        <div hidden="hidden" id="newItemInfo">
+            <hr />
+            <h4>Menu Text:</h4>
+            <input type="text"  id="newMenuName">
+            <h4>Menu Link:</h4>
+            <input type="text"  id="newMenuLink">
+            <div></div>
+            <button id="saveNewItem" class="savebtn" onclick="saveNewMenuItem()">Save</button>
+            <button type="button" id="cancelBtn" class="btn btn-danger" onclick='window.location = "http://localhost:59924/Manage/ManageMenu"'>Cancel</button>
+
+            <hr />
+        </div>
+
+
+        
+   
+    <table class="table">
+        <tr>
+            <th id="tableHeader">
+               <h4>Menu Item Name</h4>
+            </th>
+            <th id="tableHeader">
+                <h4>Links</h4>
+            </th>
+            <th id="tableHeader">
+                <h4>Actions</h4>
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td data-id="@item.MenuItemID" id="1-@item.MenuItemID">
+                    @Html.DisplayFor(modelItem => item.MenuText)
+                </td>
+                <td data-id="@item.MenuItemID" id="2-@item.MenuItemID">
+                    @Html.DisplayFor(modelItem => item.MenuLink)
+                </td>
+                <td>
+                    <button id="edit-Btn+@item.MenuItemID" class="edit" onclick="makeTextbox(@item.MenuItemID)">Edit</button>
+                    <button id="save-Btn+@item.MenuItemID" class="save" hidden="hidden" onclick="editMenu(@item.MenuItemID)">Save</button>
+                    <button id="cancel-Btn+@item.MenuItemID" class="cancel" hidden="hidden" onclick='window.location = "http://localhost:59924/Category/Index"'>Cancel</button>
+
+                    <button id="delete-Btn" class="delete" onclick="deleteMenuItem(@item.MenuItemID)">Delete</button>
+                  
+                </td>
+            </tr>
+        }
+
+    </table>
+
+
+
+</div>
+<script src="~/Scripts/MenuEditDataServices.js"></script>
+<script src="~/Scripts/MenuEditDomManupilation.js"></script>
+

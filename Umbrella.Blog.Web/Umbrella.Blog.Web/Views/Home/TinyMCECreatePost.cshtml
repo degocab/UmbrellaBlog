@@ -1,0 +1,94 @@
+﻿@model Umbrella.Blog.Web.Models.TinyMCEModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ViewBag.Title = "Create";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TinyMCE Post</title>
+    <!-- TinyMCE Script Reference -->
+    <script src="~/scripts/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="plugin/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="plugin/tinymce/init-tinymce.js"></script>
+
+    <!-- Script to wire up your TinyMCE editor -->
+    <script type="text/javascript">
+        // Initialize your tinyMCE Editor with your preferred options
+        tinyMCE.init({
+            // General options
+            mode: "textareas",
+            theme: "modern",
+            decoding: "html",
+            // Theme options
+            plugins: 'print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools contextmenu colorpicker textpattern help',
+            // Theme options
+            theme_advanced_buttons1: "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
+            theme_advanced_buttons2: "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+            theme_advanced_buttons3: "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
+            theme_advanced_buttons4: "insertlayer,moveforward,movebackward,absolute,|,styleprops,spellchecker,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,blockquote,pagebreak,|,insertfile,insertimage",
+            theme_advanced_toolbar_location: "top",
+            theme_advanced_toolbar_align: "left",
+            theme_advanced_statusbar_location: "bottom",
+            theme_advanced_resizing: true,
+            image_advtab: true,
+            templates: [
+                { title: 'Test template 1', content: 'Test 1' },
+                { title: 'Test template 2', content: 'Test 2' }
+            ],
+        });
+    </script>
+</head>
+<body>
+
+
+    <div id="createPost" >
+        <!-- This will automatically post to your Index method (that is decorated with a HttpPost attribute) -->
+        @using (Html.BeginForm("Create", "TinyMCESample", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary()
+            <div class="form-group">
+                <label>Post Title:</label>
+                @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                @*@Html.ValidationMessageFor(s => s.Student.FirstName, null, new { @class = "text-danger" })*@
+            </div>
+
+            <div class="form-group">
+                <label>Tags:</label>
+                @Html.TextBoxFor(m => m.TagString, new { @class = "form-control" })
+                @*@Html.ValidationMessageFor(s => s.Student.FirstName, null, new { @class = "text-danger" })*@
+            </div>
+
+            <div class="form-group">
+                @Html.TextBoxFor(model => model.ExpirationDate,
+           new { @type = "date", @Value = Model.ExpirationDate.ToString("yyyy-MM-dd") })
+                @*@Html.ValidationMessageFor(s => s.Student.FirstName, null, new { @class = "text-danger" })*@
+            </div>
+
+            <div class="form-group">
+                <label>Categories:</label>
+                @Html.DropDownListFor(model => model.CategoryId, Model.CategoryDropDownItems, "-Choose One-", new { @class = "form-control" })
+                @*@Html.ValidationMessageFor(s => s.Student.Major, null, new { @class = "text-danger" })*@
+            </div>
+
+            <div class="form-group">
+                <!-- This will contain your HtmlContent and use the TinyMCE editor-->
+                <textarea id="HtmlContent" name="HtmlContent" class="tinymce"> @Html.Raw(Model.HtmlContent)</textarea>
+                @Html.ValidationMessageFor(s => s.HtmlContent, null, new { @class = "text-danger" })
+            </div>
+            <input type="submit" value="Create" />
+        }
+
+
+    </div>
+   
+</body>
+</html>
+  
+
+

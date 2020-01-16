@@ -1,0 +1,150 @@
+﻿@model Umbrella.Blog.Web.Models.TinyMCEModel
+
+@{
+    ViewBag.Title = "Edit Post";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #blogContent{
+        padding: 50px 50px 50px 50px;
+    }
+</style>
+    <meta name="viewport" content="width=device-width" />
+    <title>TinyMCE Post</title>
+    <!-- TinyMCE Script Reference -->
+    <script src="~/scripts/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="plugin/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="plugin/tinymce/init-tinymce.js"></script>
+
+    <script type="text/javascript">
+        tinyMCE.init({
+            // General options
+            mode: "textareas",
+            theme: "modern",
+            decoding: "html",
+            plugins: 'print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools contextmenu colorpicker textpattern help',
+            // Theme options
+            theme_advanced_buttons1: "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
+            theme_advanced_buttons2: "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+            theme_advanced_buttons3: "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
+            theme_advanced_buttons4: "insertlayer,moveforward,movebackward,absolute,|,styleprops,spellchecker,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,blockquote,pagebreak,|,insertfile,insertimage",
+            theme_advanced_toolbar_location: "top",
+            theme_advanced_toolbar_align: "left",
+            theme_advanced_statusbar_location: "bottom",
+            theme_advanced_resizing: true,
+            image_advtab: true,
+            templates: [
+                { title: 'Test template 1', content: 'Test 1' },
+                { title: 'Test template 2', content: 'Test 2' }
+            ],
+        });
+
+        
+    </script>
+
+<div id="blogContent">
+    <h2>Edit Post</h2>
+
+
+    @using (Html.BeginForm(Html.BeginForm("Edit", "TinyMCESample", new { id = Model.Id }, FormMethod.Post)))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                <label>Post Title:</label>
+                @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label>Tags:</label>
+                @Html.TextBoxFor(m => m.TagString, new { @class = "form-control" })
+            </div>
+
+            @if (User.IsInRole("Admin"))
+                {
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Approved, "Approved")
+                    @if (!Model.Approved)
+                    {
+                        @Html.CheckBoxFor(m => m.Approved, new { @type = "checkbox", @checked = "checked" })
+                    }
+                    else
+                    {
+                        @Html.CheckBoxFor(m => m.Approved, new { @type = "checkbox", @checked = "" })
+
+                    }
+
+                </div>
+            }
+
+
+            <div class="form-group">
+                @Html.TextBoxFor(model => model.ExpirationDate,
+           new { @type = "date", @Value = Model.ExpirationDate.ToString("yyyy-MM-dd"), @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ExpirationDate, null, new { @class = "text-danger" })
+
+            </div>
+
+            <div class="form-group">
+                <label>Categories:</label>
+                @Html.DropDownListFor(model => model.CategoryId, Model.CategoryDropDownItems, "-Choose One-", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.CategoryId, null, new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <textarea name="HtmlContent" class="tinymce"> @Html.Raw(Model.HtmlContent)</textarea>
+                @Html.ValidationMessageFor(s => s.HtmlContent, null, new { @class = "text-danger" })
+            </div>
+
+            <button type="submit" class="btn btn-success">Save Changes</button>
+
+           
+        </div>
+            <div class="col-md-offset-2 col-md-10">
+            </div>
+    }
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Tags Currently Linked to Post: </th>
+
+            </tr>
+        </thead>
+        <tbody id="contentRows">
+            @if (Model.Tags.Count != 0)
+            {
+                foreach (var t in Model.Tags)
+                {
+                    <tr>
+                        <td>@t.TagText</td>
+                        <td>
+                            @Html.ActionLink("Delete Tag", "DeleteTag", "TinyMCESample", new { tagId = t.TagId, postId = Model.Id }, new { @class = "btn btn-primary" })
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+
+

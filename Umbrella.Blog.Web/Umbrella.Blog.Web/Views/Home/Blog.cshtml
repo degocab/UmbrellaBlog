@@ -1,0 +1,93 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+   
+        ViewBag.Title = "Umbrella Blog Posts";
+  
+}
+<script src="~/Scripts/blogDataService.js"></script>
+<script src="~/Scripts/BlogHtmlRender.js"></script>
+
+<script type="text/javascript">
+    function Sort() {
+        var result = document.getElementById("formInput").value;
+        var APIRequest = new XMLHttpRequest();
+        APIRequest.open('GET', 'http://localhost:59924/api/posts/filter/'+result);
+        APIRequest.onload = function () {
+
+            var postData = JSON.parse(APIRequest.responseText);
+            renderHTML(postData);
+        };
+        APIRequest.send();
+
+       
+    }
+</script>
+<style>
+    a {
+        color: white;
+        padding-top:20px;
+    }
+    footer {
+      
+        visibility:hidden;
+    }
+    
+</style>
+
+
+
+<div id="blogRibbonContainer"class="col-md-12"  >
+    <div class="col-md-12" id="blogAdminRibbon" align="left">
+        <div class="col-md-8">
+
+
+        </div>
+        <div class="form-inline">
+            <div style=" padding-top: 8px; padding-bottom: 8px; color:white;">
+                Enter a Tag or Category:
+                <input id="formInput" class="form-control" style="height:30px;" />
+
+                <button style="height:30px;" type="button" onclick="Sort()" class="btn btn-primary">Search</button>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+<h2 id="subTitle">@ViewBag.Title.</h2>
+<div id="blogContent" class="col-md-12">
+    @*<div id="blogPost" class="col-md-8">
+       @*<div class="col-md-12">
+       <h2> This is a title for a blogpost</h2>
+           <hr  id="blackHr"/>
+       </div></div>*@
+
+       
+
+   
+    @*<div id="tagList" class="col-md-4">
+        <div class="col-md-12">
+            <h2> Popular Tags </h2>
+            <hr id="blackHr" />
+
+        </div>*@
+
+    @*<div id="tagList" class="col-md-4">*@
+        @*<div class="col-md-4">
+            <h2> Popular Tags </h2>
+            <hr id="blackHr" />
+
+        </div>*@
+    </div>
+
+
+
+

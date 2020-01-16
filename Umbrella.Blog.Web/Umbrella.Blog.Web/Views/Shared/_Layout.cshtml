@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+  
+    <script>
+
+        $(document)
+            .ready(function () {
+                getData();
+            });
+
+        
+        function getData() {
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "http://localhost:59924/api/menuitems",
+                "method": "GET",
+                "headers": {
+                    "content-type": "application/x-www-form-urlencoded",
+                    "cache-control": "no-cache",
+                    "postman-token": "5c761847-ff03-400f-fdeb-c6f4eb3b701d"
+                }
+            }
+            $.ajax(settings)
+                .done(function (response) {
+                    renderMenu(response);
+                });
+        }
+
+        function renderMenu(data) {
+            var documentObject = document.getElementById("custom_pages");
+            var htmlToAdd = '';
+            console.log(data[0])
+            for (var i = 0; i < data.length; i++) {
+                htmlToAdd += '<li> <a href="' + data[i].MenuLink + '">' + data[i].MenuText + '</a></li>';
+            }
+            documentObject.insertAdjacentHTML('beforeend', htmlToAdd);
+        }
+
+
+
+    </script>
+
+</head>
+<body >
+    <div class="Logo-Header" id="LogoHeader" @*data-spy="affix"*@ >
+        <img id="HeadLogo" style="width:25%; position:relative" src="~/Images/10.png" alt="Company-Logo" />
+    </div >
+        <div class="navbar navbar-inverse" >
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span  class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("The Umbrella Corporation", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                        <li>@Html.ActionLink("Blog", "Blog", "Home")</li>
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+@if (User.IsInRole("Admin"))
+{
+                                    <li>@Html.ActionLink("Categories", "Manage", "Category")</li>
+    <li>@Html.ActionLink("Users", "ListUser", "Account")</li>
+
+}
+                                   
+                                    <li>@Html.ActionLink("Create Post", "TinyMCECreatePost", "TinyMCESample")</li>
+                                    
+                                    <li>@Html.ActionLink("Manage Menu", "ManageMenu", "Manage")</li>
+
+                                </ul>
+                            </li>
+                            
+                        }
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pages<span class="caret"></span></a>
+                            <ul id="custom_pages" class="dropdown-menu">
+
+
+                            </ul>
+                        </li>
+
+                    </ul>
+
+                    @Html.Partial("_LoginPartial")
+                </div>
+
+            </div>
+        </div>
+        <div class="container body-content">
+            @RenderBody()
+            
+            
+        </div>
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+</body>
+</html>

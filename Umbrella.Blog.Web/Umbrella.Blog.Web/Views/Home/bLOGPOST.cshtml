@@ -1,0 +1,130 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    #blogComment {
+        background-color: #dddddd;
+        border: .5px solid #000;
+        border-radius: 2px;
+        -webkit-filter: drop-shadow(5px 5px 5px #222);
+        filter: drop-shadow(5px 5px 5px #222);
+        position: relative;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    #blogContent {
+        border-top-right-radius: 0px;
+    }
+    /*#approve-Btn, #delete-Btn,#edit-Btn {
+        background-color: #dddddd;
+        border-radius: 3px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border: none;
+        outline: solid;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.8s;
+        outline-color: transparent;
+    }*/
+    #approve-Btn {
+
+        background-color: limegreen;
+        border-radius: 3px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border: none;
+        padding-top: 8px;
+        outline: solid;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.5s;
+        outline-color: transparent;
+    }
+
+    #delete-Btn {
+
+        background-color: red;
+        border-radius: 3px;
+        padding-top: 8px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border: none;
+        outline: solid;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.5s;
+        outline-color: transparent;
+    }
+
+    #edit-Btn {
+
+        background-color: deepskyblue;
+        border-radius: 3px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border: none;
+        padding-top: 8px;
+        outline: solid;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.5s;
+        outline-color: transparent;
+    }
+
+    /* Change background color of buttons on hover */
+    #approve-Btn:hover {
+        background-color: lightgreen;
+        opacity: 1;
+    }
+
+    #delete-Btn:hover {
+        background-color: lightcoral;
+        opacity: 1;
+    }
+    #edit-Btn:hover {
+        background-color: lightblue;
+        opacity: 1;
+    }
+    /* Style the tab content */
+    /*.tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }*/
+</style>
+<input id="blogId" hidden="hidden" value="@Url.RequestContext.RouteData.Values["id"]" />
+<div align="right">
+
+   @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+   {
+       <button id="edit-Btn" class="tablinks"  onclick="window.location.href='/TinyMCESample/Edit?postId=@Url.RequestContext.RouteData.Values["id"]'">Edit</button>
+       
+   }
+
+    @if (User.IsInRole("Admin"))
+    {
+        
+        <button id="approve-Btn" class="tablinks" onclick="approvePost()">Approve</button>
+        <button id="delete-Btn"  class="tablinks" onclick="deletePost()">Delete</button>
+
+    }
+</div>
+
+<div id="blogContent" class="col-md-12">
+
+</div>
+
+
+
+   
+
+
+<script src="~/Scripts/blogPostDataService.js"></script>
+<script src="~/Scripts/blogPostRenderHtml.js"></script>
+

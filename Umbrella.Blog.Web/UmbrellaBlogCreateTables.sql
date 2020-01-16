@@ -1,0 +1,88 @@
+USE UmbrellaBlog
+GO
+
+IF EXISTS(SELECT * FROM sys.tables WHERE name='PostsTags')
+	DROP TABLE PostsTags
+GO
+
+
+IF EXISTS(SELECT * FROM sys.tables WHERE name='Posts')
+	DROP TABLE Posts
+GO
+
+IF EXISTS(SELECT * FROM sys.tables WHERE name='Tags')
+	DROP TABLE Tags
+GO
+
+IF EXISTS(SELECT * FROM sys.tables WHERE name='Categories')
+	DROP TABLE Categories
+GO
+
+CREATE TABLE Categories(
+	CategoryId INT NOT NULL IDENTITY(1,1),
+	CategoryName VARCHAR(30),
+	CONSTRAINT PK_Categories_CategoryId
+	PRIMARY KEY (CategoryId)
+)
+GO
+
+CREATE TABLE Tags(
+	TagId INT NOT NULL IDENTITY(1,1),
+	TagText VARCHAR(30) NOT NULL,
+	CONSTRAINT PK_Tags_TagId
+	PRIMARY KEY (TagId)
+)
+GO
+
+CREATE TABLE Posts(
+	PostId INT NOT NULL IDENTITY(1,1),
+	PostText NVARCHAR(max) NOT NULL,
+	PostTitle NVARCHAR(50) NULL,
+	Approved BIT NOT NULL,
+	PostDate DATETIME2 NOT NULL,
+	ExpirationDate DATETIME2  NULL,
+	CategoryId INT NULL,
+	UserId NVARCHAR(128) NOT NULL,
+	CONSTRAINT PK_Posts_PostId
+	PRIMARY KEY (PostId),
+	CONSTRAINT FK_Posts_CategoryId
+	FOREIGN KEY (CategoryId) REFERENCES Categories(CategoryId),
+	CONSTRAINT FK_Posts_Id
+	FOREIGN KEY (UserId) REFERENCES AspNetUsers(Id),
+)
+GO
+
+
+CREATE TABLE PostsTags(
+	PostTagId INT NOT NULL IDENTITY(1,1),
+	TagId INT NOT NULL,
+	PostId INT NOT NULL,
+	CONSTRAINT FK_PostsTags_TagId
+	FOREIGN KEY (TagId) REFERENCES Tags(TagId),
+
+)
+GO
+USE [UmbrellaBlog]
+GO
+
+/****** Object:  Table [dbo].[MenuItems]    Script Date: 11/15/2017 1:51:44 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MenuItems](
+	[MenuItemID] [int] IDENTITY(1,1) NOT NULL,
+	[MenuText] [varchar](50) NOT NULL,
+	[MenuLink] [varchar](max) NOT NULL,
+ CONSTRAINT [PK_MenuItems] PRIMARY KEY CLUSTERED 
+(
+	[MenuItemID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+
+

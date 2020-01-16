@@ -1,0 +1,81 @@
+﻿USE UmbrellaBlog
+GO
+
+IF EXISTS(SELECT * FROM sys.tables WHERE name='PostsTags')
+	DROP TABLE PostsTags
+GO
+
+IF EXISTS(SELECT * FROM sys.tables WHERE name='Comments')
+	DROP TABLE Comments
+GO
+
+IF EXISTS(SELECT * FROM sys.tables WHERE name='Posts')
+	DROP TABLE Posts
+GO
+
+IF EXISTS(SELECT * FROM sys.tables WHERE name='Tags')
+	DROP TABLE Tags
+GO
+
+IF EXISTS(SELECT * FROM sys.tables WHERE name='Categories')
+	DROP TABLE Categories
+GO
+
+CREATE TABLE Categories(
+	CategoryId INT NOT NULL IDENTITY(1,1),
+	CategoryName VARCHAR(30),
+	CONSTRAINT PK_Categories_CategoryId
+	PRIMARY KEY (CategoryId)
+)
+GO
+
+CREATE TABLE Tags(
+	TagId INT NOT NULL IDENTITY(1,1),
+	TagText VARCHAR(30) NOT NULL,
+	CONSTRAINT PK_Tags_TagId
+	PRIMARY KEY (TagId)
+)
+GO
+
+CREATE TABLE Posts(
+	PostId INT NOT NULL IDENTITY(1,1),
+	PostText NVARCHAR(max) NOT NULL,
+	Approved BIT NOT NULL,
+	PostDate DATETIME2 NOT NULL,
+	ExpirationDate DATETIME2  NULL,
+	CategoryId INT NOT NULL,
+	UserId NVARCHAR(128) NOT NULL,
+	CONSTRAINT PK_Posts_PostId
+	PRIMARY KEY (PostId),
+	CONSTRAINT FK_Posts_CategoryId
+	FOREIGN KEY (CategoryId) REFERENCES Categories(CategoryId),
+	CONSTRAINT FK_Posts_Id
+	FOREIGN KEY (UserId) REFERENCES AspNetUsers(Id),
+)
+GO
+
+CREATE TABLE Comments(
+	CommentId INT NOT NULL IDENTITY(1,1),
+	CommentDate DATETIME2 NOT NULL,
+	CommentText NVARCHAR(125) NOT NULL,
+	PostId INT NOT NULL,
+	CONSTRAINT PK_Comments_CommentId
+	PRIMARY KEY (CommentId),
+	CONSTRAINT FK_Comments_PostId
+	FOREIGN KEY (PostId) REFERENCES Posts(PostId)
+)
+GO
+
+CREATE TABLE PostsTags(
+	PostTagId INT NOT NULL IDENTITY(1,1),
+	TagId INT NOT NULL,
+	PostId INT NOT NULL,
+	CONSTRAINT PK_PostsTags_PostTagId
+	PRIMARY KEY (PostTagId),
+	CONSTRAINT FK_PostsTags_TagId
+	FOREIGN KEY (TagId) REFERENCES Tags(TagId),
+	CONSTRAINT FK_PostsTags_PostId
+	FOREIGN KEY (PostId) REFERENCES Posts(PostId)
+)
+GO
+

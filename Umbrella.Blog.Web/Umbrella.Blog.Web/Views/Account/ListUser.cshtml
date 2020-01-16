@@ -1,0 +1,72 @@
+﻿@model List<Umbrella.Blog.Web.Models.UserVM>
+@{
+    ViewBag.Title = "ListUser";
+}
+
+
+
+<style>
+    #UserTable {
+        background-color: azure;
+    }
+</style>
+<div class="col-md-8">
+
+    <table id="UserTable" class="table table-responsive table-bordered">
+        <tr>
+            <th>
+                Email
+            </th>
+            <th>
+                Role
+
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var UserVM in Model)
+            {
+            <tr>
+                <td>
+                    @UserVM.userEmail
+                </td>
+                <td>
+                    @UserVM.roles
+                </td>
+
+
+                <td>
+                    @if (UserVM.roles != null && UserVM.roles.Contains("Employee"))
+                    {
+                       
+                        @Html.ActionLink("Revoke Employee status", "RevokeEmployee", "UserManagement", new { id = UserVM.UserId }, null)
+
+
+                    }
+                    else if(UserVM.roles == null )
+                    {
+
+                        @Html.ActionLink("Set as Employee", "SetEmployee", "UserManagement", new { id = UserVM.UserId }, null)
+
+
+                    }
+
+                        @if(UserVM.roles == null || !UserVM.roles.Contains("Admin"))
+                        {
+                        @Html.Raw("|")
+                         }
+                   
+                   
+                     @if (UserVM.roles == null || !UserVM.roles.Contains("Admin"))
+                     {
+                         @Html.ActionLink("Delete", "DeleteConfirmed", "UserManagement", new { id = UserVM.UserId }, new { onclick = "return confirm('Are you sure?');" })
+                     }
+
+                </td>
+
+            </tr>
+
+        }
+
+    </table>
+</div>
